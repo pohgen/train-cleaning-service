@@ -8,10 +8,12 @@ class WorkerAdmin(UserAdmin):
     list_display = ("username", "first_name", "last_name", "role")
     list_filter = ("role", )
     search_fields = ("first_name", "last_name", "username")
-    fieldsets = (
-        ("Required", {"fields": ("username", "password")}),
-        (("Personal info"), {"fields": ("first_name", "last_name", "email")}),
+    fieldsets = UserAdmin.fieldsets + (
         (("Role"),{"fields": ("role",),},),
+    )
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        (("Info"),{"fields": ("first_name", "last_name"),},),
+        (("Choose role"),{"fields": ("role",),},),
     )
     ordering = ("role", )
 

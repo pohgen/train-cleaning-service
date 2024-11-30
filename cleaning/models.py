@@ -13,9 +13,9 @@ class Train(models.Model):
     cleaning_type = models.ForeignKey("CleaningType", on_delete=models.CASCADE)
     status = models.CharField(max_length=31, choices=Status.choices, default=Status.AWAITS)
     workers = models.ManyToManyField("accounts.Worker", related_name="trains")
-    approval = models.ForeignKey("Approval", on_delete=models.SET_NULL, null=True)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    approval = models.ForeignKey("Approval", on_delete=models.SET_NULL, null=True, blank=True)
+    start_time = models.DateTimeField(null=True, blank=True)
+    end_time = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.name
