@@ -31,3 +31,4 @@ class Approval(models.Model):
     worker = models.ForeignKey("Worker", on_delete=models.CASCADE, related_name="approvals")
     status = models.BooleanField()
     comments = models.TextField(null=True, blank=True)
+    time = models.DateTimeField(auto_now_add=True)
