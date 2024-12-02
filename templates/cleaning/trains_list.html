@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+  <h1>
+    Train List
+{#    <a href="{% url 'cleaning:trains-create' %}" class="btn btn-primary link-to-page">#}
+{#      Create#}
+{#    </a>#}
+  </h1>
+{#  <form method="get" action="" class="form-inline">#}
+{#      {{ search_form|crispy }}#}
+{#      <input type="submit" value="Search" class="btn btn-primary">#}
+{#    </form>#}
+  <hr>
+
+  {% if trains_list %}
+    <table class="table">
+      <tr>
+        <th>Name</th>
+        <th>Cleaning type</th>
+        <th>Status</th>
+        <th>Workers</th>
+        <th>Approval</th>
+        <th>Start time</th>
+        <th>End time</th>
+      </tr>
+
+      {% for train in trains_list %}
+        <tr>
+          <td>
+              {{ train.name }}
+          </td>
+          <td>
+              {{ train.cleaning_type.title }}
+          </td>
+          <td>
+              {{ train.status }}
+          </td>
+          <td>
+            {% for worker in train.workers.all %}
+              {{ worker.first_name }} {{ worker.last_name }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </td>
+          <td>
+              {% if user.role == "CLEANER" and not train.approval.status %}
+                -
+              {% else %}
+                {% if user.role == "AUDITOR" and not train.approval.status %}
+                  <a href="{% url "#" train.pk %}" class="btn btn-secondary right-side-button">
+                    Approve
+                  </a>
+                  <a href="{% url "#" train.pk %}" class="btn btn-secondary right-side-button">
+                    Decline
+                  </a>
+                {% else %}
+                  {{ train.approval.status }}
+                {% endif %}
+              {% endif %}
+          </td>
+          <td>
+            {% if train.start_time %}
+              {{ train.start_time }}
+            {% else %}
+              <a href="{% url "cleaning:clean-time-start" train.pk %}" class="btn btn-secondary right-side-button">
+                Start
+              </a>
+            {% endif %}
+          </td>
+          <td>
+            {% if train.end_time %}
+              {{ train.end_time }}
+            {% else %}
+              {% if train.start_time %}
+                <a href="{% url "cleaning:clean-time-end" train.pk %}" class="btn btn-secondary right-side-button">
+            End
+              </a>
+              {% else %}
+                You need to start clean  
+              {% endif %}
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+
+  {% else %}
+      <p>There are no trains to clean.</p>
+  {% endif %}
+{% endblock %}

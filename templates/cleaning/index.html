@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Train cleaning service</h1>
+    <p>Today we are working and there are our statistics:</p>
+    <ul>
+        <li>
+          <strong>Completed cleaning:</strong>
+          {% for train in cleaned_trains %}
+            {{ train }}
+          {% endfor %}
+        </li>
+        <li>
+          <strong>Awaiting cleaning:</strong>
+          {% for train in uncleaned_trains %}
+            {{ train }}
+          {% endfor %}
+        </li>
+        <li>
+          <strong>Rejected cleaning:</strong>
+          {% for train in rejected_trains %}
+            {{ train }}
+          {% endfor %}
+        </li>
+    </ul>
+
+{% endblock %}
