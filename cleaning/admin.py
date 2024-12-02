@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from accounts.models import Worker
-from cleaning.models import CleaningType, Train, Approval
+from cleaning.models import Train, Approval
 
 @admin.register(Worker)
 class WorkerAdmin(UserAdmin):
@@ -25,5 +25,4 @@ class TrainAdmin(admin.ModelAdmin):
     ordering = ("-status", )
 
 
-admin.site.register(CleaningType)
 admin.site.register(Approval)
