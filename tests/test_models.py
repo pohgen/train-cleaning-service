@@ -1,3 +1,5 @@
+import time
+
 from django.test import TestCase
 from django.utils.timezone import now
 from cleaning.models import Train, Approval
@@ -11,7 +13,7 @@ class TrainModelTest(TestCase):
         self.approval = Approval.objects.create(worker=self.worker, status=True, comments="Test approval")
 
         self.train = Train.objects.create(
-            name="Train001",
+            name="78-002",
             cleaning_type="SP1",
             status=Train.Status.AWAITS,
             approval=self.approval,
@@ -19,7 +21,7 @@ class TrainModelTest(TestCase):
         self.train.workers.add(self.worker)
 
     def test_train_string_representation(self):
-        self.assertEqual(str(self.train), "Train001")
+        self.assertEqual(str(self.train), "78-002")
 
     def test_default_status(self):
         self.assertEqual(self.train.status, Train.Status.AWAITS)
@@ -45,7 +47,7 @@ class TrainModelTest(TestCase):
         self.train.start_time = now()
         self.train.save()
         self.assertIsNotNone(self.train.start_time)
-
+        time.sleep(0.1)
         self.train.end_time = now()
         self.train.save()
         self.assertIsNotNone(self.train.end_time)
@@ -55,7 +57,7 @@ class TrainModelTest(TestCase):
 
 class ApprovalModelTest(TestCase):
     def setUp(self):
-        self.worker = Worker.objects.create(username="approver")
+        self.worker = Worker.objects.create(username="approver", role="auditor")
         self.approval = Approval.objects.create(worker=self.worker, status=True, comments="Initial approval")
 
     def test_approval_string_representation(self):

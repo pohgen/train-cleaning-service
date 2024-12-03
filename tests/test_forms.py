@@ -11,7 +11,7 @@ class TrainCreateFormTest(TestCase):
 
     def test_train_create_form_valid_data(self):
         form_data = {
-            'name': 'Train001',
+            'name': '78-003',
             'cleaning_type': 'SP1',
             'workers': [self.worker1.id, self.worker2.id],
         }
@@ -48,12 +48,13 @@ class ApprovalFormTest(TestCase):
         }
         form = ApprovalForm(data=form_data)
         self.assertTrue(form.is_valid())
-        self.assertIsNone(form.cleaned_data.get('comments', None))
+        result = form.cleaned_data.get('comments')
+        self.assertEqual(result, '')
 
 
 class TrainSearchFormTest(TestCase):
     def test_train_search_form_valid_data(self):
-        form_data = {'name': 'Train001'}
+        form_data = {'name': '78-003'}
         form = TrainSearchForm(data=form_data)
         self.assertTrue(form.is_valid())
 
