@@ -29,7 +29,7 @@ class Train(models.Model):
 
 class Approval(models.Model):
     worker = models.ForeignKey("accounts.Worker", on_delete=models.CASCADE, related_name="approvals")
-    status = models.BooleanField(null=True)
+    status = models.BooleanField()
     comments = models.TextField(null=True, blank=True)
     time = models.DateTimeField(auto_now_add=True)
 
