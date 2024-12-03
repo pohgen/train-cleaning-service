@@ -1,6 +1,5 @@
 from django.test import TestCase
 from accounts.models import Worker
-from cleaning.models import Train, Approval
 from cleaning.forms import TrainCreateForm, ApprovalForm, TrainSearchForm
 
 

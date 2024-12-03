@@ -1,8 +1,7 @@
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.urls import reverse
-from django.utils.timezone import now
 from accounts.models import Worker
-from cleaning.models import Train, Approval
+from cleaning.models import Train
 
 
 class IndexViewTest(TestCase):
@@ -24,7 +23,7 @@ class StampDateViewTest(TestCase):
         self.train = Train.objects.create(name="Train1", status=Train.Status.AWAITS)
 
     def test_stamp_date_start(self):
-        response = self.client.get(reverse('cleaning:clean-time-start', args=[self.train.pk]))
+        self.client.get(reverse('cleaning:clean-time-start', args=[self.train.pk]))
         self.train.refresh_from_db()
         self.assertEqual(self.train.status, Train.Status.IN_PROGRESS)
         self.assertIsNotNone(self.train.start_time)
@@ -32,7 +31,7 @@ class StampDateViewTest(TestCase):
     def test_stamp_date_end(self):
         self.train.status = Train.Status.IN_PROGRESS
         self.train.save()
-        response = self.client.get(reverse('cleaning:clean-time-end', args=[self.train.pk]))
+        self.client.get(reverse('cleaning:clean-time-end', args=[self.train.pk]))
         self.train.refresh_from_db()
         self.assertEqual(self.train.status, Train.Status.COMPLETED)
         self.assertIsNotNone(self.train.end_time)
@@ -49,7 +48,7 @@ class ApprovalCreateViewTest(TestCase):
             'status': True,
             'comments': 'Approved',
         }
-        response = self.client.post(reverse('cleaning:approval-create', args=[self.train.pk]), data=form_data)
+        self.client.post(reverse('cleaning:approval-create', args=[self.train.pk]), data=form_data)
         self.train.refresh_from_db()
         self.assertEqual(self.train.status, Train.Status.APPROVED)
         self.assertIsNotNone(self.train.approval)
