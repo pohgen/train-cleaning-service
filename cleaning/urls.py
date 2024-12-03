@@ -19,7 +19,7 @@ urlpatterns = [
     path("trains/<int:pk>/update/", TrainUpdateView.as_view(), name="update-train"),
     path("trains/<int:pk>/delete/", TrainDeleteView.as_view(), name="delete-train"),
     path("trains/<int:pk>/detail/", TrainDetailView.as_view(), name="detail-train"),
-    path("trains/<int:pk>/approval-create/", approval_create_view, name="approval-create")
+    path("trains/<int:pk>/approval-create/", approval_create_view, name="approval-create"),
 
 ]
 

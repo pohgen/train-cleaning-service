@@ -3,11 +3,11 @@ from django.db import models
 
 class Train(models.Model):
     class Status(models.TextChoices):
-        AWAITS = "awaits cleaning", "Awaits cleaning"
-        IN_PROGRESS = "in progress", "Cleaning in progress"
-        COMPLETED = "completed", "Cleaning is completed"
-        APPROVED = "approved", "Cleaning is approved"
-        CANCELED = "canceled", "Cleaning is canceled"
+            AWAITS = "awaits cleaning", "Awaits cleaning"
+            IN_PROGRESS = "in progress", "Cleaning in progress"
+            COMPLETED = "completed", "Cleaning is completed"
+            APPROVED = "approved", "Cleaning is approved"
+            CANCELED = "canceled", "Cleaning is canceled"
 
     class Title(models.TextChoices):
         SP0 = "SP0", "SP0"

@@ -96,7 +96,6 @@ def approval_create_view(request, pk):
     train = get_object_or_404(Train, pk=pk)
 
     if train.approval:
-        messages.info(request, "This train already approved!")
         return redirect("cleaning:trains-list")
 
     if request.method == "POST":
@@ -107,10 +106,8 @@ def approval_create_view(request, pk):
             train.approval = approval
             train.save()
             if approval.status:
-                messages.success(request, "Cleaning approved!")
                 train.status = Train.Status.APPROVED
             else:
-                messages.success(request, "Cleaning rejected!")
                 train.status = Train.Status.CANCELED
             train.save()
             return redirect("cleaning:trains-list")

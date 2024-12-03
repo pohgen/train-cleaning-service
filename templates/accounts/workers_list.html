@@ -22,13 +22,11 @@
             {% for worker in workers_list %}
               <tr>
                 <td>
-                  <a href="{{ worker.get_absolute_url }}" class="text-decoration-none">
                     {{ worker.username }}
                     {% if user == worker %}
                       <span class="badge bg-primary ms-2">Me</span>
                     {% endif %}
-                  </a>
-                </td>
+                  </td>
                 <td>{{ worker.first_name }}</td>
                 <td>{{ worker.last_name }}</td>
                 <td>
