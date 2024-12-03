@@ -73,6 +73,10 @@ class TrainCreateView(LoginRequiredMixin, generic.CreateView):
     form_class = TrainCreateForm
     success_url = reverse_lazy("cleaning:trains-list")
 
+    def get_form(self, *args, **kwargs):
+        form = super().get_form(*args, **kwargs)
+        form.fields["workers"].queryset = form.fields["workers"].queryset.exclude(Q(username="admin") | Q(role="auditor"))
+        return form
 
 class TrainUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Train
