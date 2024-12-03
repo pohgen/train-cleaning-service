@@ -4,14 +4,14 @@
 {% block content %}
   <h1>
     Train List
-{#    <a href="{% url 'cleaning:trains-create' %}" class="btn btn-primary link-to-page">#}
-{#      Create#}
-{#    </a>#}
+    <a href="{% url 'cleaning:create-train' %}" class="btn btn-primary link-to-page">
+      Add train
+    </a>
   </h1>
-{#  <form method="get" action="" class="form-inline">#}
-{#      {{ search_form|crispy }}#}
-{#      <input type="submit" value="Search" class="btn btn-primary">#}
-{#    </form>#}
+  <form method="get" action="" class="form-inline">
+    {{ search_form|crispy }}
+    <input type="submit" value="Search" class="btn btn-primary">
+  </form>
   <hr>
 
   {% if trains_list %}
@@ -24,62 +24,89 @@
         <th>Approval</th>
         <th>Start time</th>
         <th>End time</th>
+        <th>Manage</th>
       </tr>
 
       {% for train in trains_list %}
         <tr>
+        
           <td>
-              {{ train.name }}
+              <a href="{% url 'cleaning:detail-train' pk=train.id %}">{{ train.name }}</a>
           </td>
+        
           <td>
-              {{ train.cleaning_type.title }}
+              {{ train.cleaning_type }}
           </td>
+        
           <td>
               {{ train.status }}
           </td>
+        
           <td>
             {% for worker in train.workers.all %}
               {{ worker.first_name }} {{ worker.last_name }}{% if not forloop.last %}, {% endif %}
             {% endfor %}
           </td>
+        
           <td>
-              {% if user.role == "CLEANER" and not train.approval.status %}
+              {% if user.role == "cleaner" and not train.approval %}
                 -
               {% else %}
-                {% if user.role == "AUDITOR" and not train.approval.status %}
-                  <a href="{% url "#" train.pk %}" class="btn btn-secondary right-side-button">
+                {% if user.role == "auditor" and not train.approval and train.end_time%}
+                  <a href="{% url "cleaning:approval-create" pk=train.id %}" class="btn btn-secondary right-side-button">
                     Approve
                   </a>
-                  <a href="{% url "#" train.pk %}" class="btn btn-secondary right-side-button">
-                    Decline
-                  </a>
                 {% else %}
-                  {{ train.approval.status }}
+                  {% if not train.end_time %}
+                    <p>Still cleaning...</p>
+                      {% else %}
+                        {{ train.approval.status|yesno:"Approved,Rejected" }}
+                  {% endif %}
                 {% endif %}
               {% endif %}
           </td>
+        
           <td>
             {% if train.start_time %}
               {{ train.start_time }}
             {% else %}
-              <a href="{% url "cleaning:clean-time-start" train.pk %}" class="btn btn-secondary right-side-button">
-                Start
-              </a>
+              {% if user.role == "auditor" %}
+                <p>-</p>
+              {% else %}
+                <a href="{% url "cleaning:clean-time-start" pk=train.id %}" class="btn btn-secondary right-side-button">
+                  Start
+                </a>
+              {% endif %}
             {% endif %}
           </td>
+        
           <td>
             {% if train.end_time %}
               {{ train.end_time }}
             {% else %}
-              {% if train.start_time %}
-                <a href="{% url "cleaning:clean-time-end" train.pk %}" class="btn btn-secondary right-side-button">
-            End
-              </a>
+              {% if user.role == "auditor" %}
+                <p>-</p>
               {% else %}
-                You need to start clean  
+                {% if train.start_time %}
+                  <a href="{% url "cleaning:clean-time-end" pk=train.id %}" class="btn btn-secondary right-side-button">
+                  End
+                </a>
+                {% else %}
+                  You need to start clean  
+                {% endif %}
               {% endif %}
             {% endif %}
           </td>
+        
+          <td>
+            <a href="{% url 'cleaning:update-train' pk=train.id %}">
+              <i class="bi bi-pencil"></i>
+            </a>
+            <a href="{% url 'cleaning:delete-train' pk=train.id %}">
+              <i class="bi bi-trash"></i>
+            </a>
+          </td>
+        
         </tr>
       {% endfor %}
     </table>

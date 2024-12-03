@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+{% block content %}
+  <h5>Do you want to delete {{ train.name }} from cleaning list?</h5>
+  <p><i>You can't return this train!</i></p>
+  <form action="" method="post">
+  {% csrf_token %}
+    <input type="submit" value="Confirm" class="btn btn-danger">
+    <a href="{% url 'cleaning:trains-list' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}

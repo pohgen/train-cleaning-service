@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>
+    Name: {{ train.name }}
+  </h1>
+
+  <p><strong>Cleaning type:</strong> {{ train.cleaning_type }}</p>
+  <p><strong>Status:</strong> {{ train.status }}</p>
+  <p><strong>Approval:</strong> {{ train.approval.status }}</p>
+  <p><strong>Start time:</strong> {{ train.start_time }}</p>
+  <p><strong>End time:</strong> {{ train.end_time }}</p>
+
+  <div class="ml-3">
+    <h4>Workers</h4>
+
+    {% for worker in train.workers.all %}
+        <hr>
+        <p><strong>Name:</strong> {{ worker.first_name }}</p>
+        <p><strong>Surname:</strong> {{ worker.last_name }}</p>
+
+    {% empty %}
+      <p>No trains!</p>
+    {% endfor %}
+  </div>
+{% endblock %}
