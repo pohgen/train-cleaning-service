@@ -2,116 +2,155 @@
 {% load crispy_forms_filters %}
 
 {% block content %}
-  <h1>
-    Train List
-    <a href="{% url 'cleaning:create-train' %}" class="btn btn-primary link-to-page">
-      Add train
-    </a>
-  </h1>
-  <form method="get" action="" class="form-inline">
-    {{ search_form|crispy }}
-    <input type="submit" value="Search" class="btn btn-primary">
-  </form>
-  <hr>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="mb-0">Train List</h1>
+  <a href="{% url 'cleaning:create-train' %}" class="btn btn-primary">
+    <i class="bi bi-plus-lg me-2"></i>Add train
+  </a>
+</div>
 
-  {% if trains_list %}
-    <table class="table">
-      <tr>
-        <th>Name</th>
-        <th>Cleaning type</th>
-        <th>Status</th>
-        <th>Workers</th>
-        <th>Approval</th>
-        <th>Start time</th>
-        <th>End time</th>
-        <th>Manage</th>
-      </tr>
+<div class="card mb-4">
+  <div class="card-body">
+    <form method="get" action="" class="row g-3">
+      {{ search_form|crispy }}
+      <div class="col-auto">
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-search me-2"></i>Search
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 
-      {% for train in trains_list %}
+{% if trains_list %}
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead class="table-dark">
         <tr>
-        
-          <td>
-              <a href="{% url 'cleaning:detail-train' pk=train.id %}">{{ train.name }}</a>
-          </td>
-        
-          <td>
-              {{ train.cleaning_type }}
-          </td>
-        
-          <td>
-              {{ train.status }}
-          </td>
-        
-          <td>
-            {% for worker in train.workers.all %}
-              {{ worker.first_name }} {{ worker.last_name }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-          </td>
-        
-          <td>
+          <th>Name</th>
+          <th>Cleaning type</th>
+          <th>Status</th>
+          <th>Workers</th>
+          <th>Approval</th>
+          <th>Start time</th>
+          <th>End time</th>
+          <th>Manage</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for train in trains_list %}
+          <tr>
+            <td>
+              <a href="{% url 'cleaning:detail-train' pk=train.id %}" class="text-decoration-none">{{ train.name }}</a>
+            </td>
+            <td>{{ train.cleaning_type }}</td>
+            <td>
+              <span class="badge bg-secondary">{{ train.status }}</span>
+            </td>
+            <td>
+              {% for worker in train.workers.all %}
+                {{ worker.first_name }} {{ worker.last_name }}{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            </td>
+            <td>
               {% if user.role == "cleaner" and not train.approval %}
                 -
               {% else %}
-                {% if user.role == "auditor" and not train.approval and train.end_time%}
-                  <a href="{% url "cleaning:approval-create" pk=train.id %}" class="btn btn-secondary right-side-button">
+                {% if user.role == "auditor" and not train.approval and train.end_time %}
+                  <a href="{% url 'cleaning:approval-create' pk=train.id %}" class="btn btn-sm btn-outline-primary">
                     Approve
                   </a>
                 {% else %}
                   {% if not train.end_time %}
-                    <p>Still cleaning...</p>
-                      {% else %}
-                        {{ train.approval.status|yesno:"Approved,Rejected" }}
+                    <span class="text-muted">Still cleaning...</span>
+                  {% else %}
+                    <span class="badge bg-{{ train.approval.status|yesno:'success,danger' }}">
+                      {{ train.approval.status|yesno:"Approved,Rejected" }}
+                    </span>
                   {% endif %}
                 {% endif %}
               {% endif %}
-          </td>
-        
-          <td>
-            {% if train.start_time %}
-              {{ train.start_time }}
-            {% else %}
-              {% if user.role == "auditor" %}
-                <p>-</p>
+            </td>
+            <td>
+              {% if train.start_time %}
+                {{ train.start_time }}
               {% else %}
-                <a href="{% url "cleaning:clean-time-start" pk=train.id %}" class="btn btn-secondary right-side-button">
-                  Start
-                </a>
-              {% endif %}
-            {% endif %}
-          </td>
-        
-          <td>
-            {% if train.end_time %}
-              {{ train.end_time }}
-            {% else %}
-              {% if user.role == "auditor" %}
-                <p>-</p>
-              {% else %}
-                {% if train.start_time %}
-                  <a href="{% url "cleaning:clean-time-end" pk=train.id %}" class="btn btn-secondary right-side-button">
-                  End
-                </a>
+                {% if user.role == "auditor" %}
+                  <span class="text-muted">-</span>
                 {% else %}
-                  You need to start clean  
+                  <a href="{% url 'cleaning:clean-time-start' pk=train.id %}" class="btn btn-sm btn-outline-primary">
+                    Start
+                  </a>
                 {% endif %}
               {% endif %}
-            {% endif %}
-          </td>
-        
-          <td>
-            <a href="{% url 'cleaning:update-train' pk=train.id %}">
-              <i class="bi bi-pencil"></i>
-            </a>
-            <a href="{% url 'cleaning:delete-train' pk=train.id %}">
-              <i class="bi bi-trash"></i>
-            </a>
-          </td>
-        
-        </tr>
-      {% endfor %}
+            </td>
+            <td>
+              {% if train.end_time %}
+                {{ train.end_time }}
+              {% else %}
+                {% if user.role == "auditor" %}
+                  <span class="text-muted">-</span>
+                {% else %}
+                  {% if train.start_time %}
+                    <a href="{% url 'cleaning:clean-time-end' pk=train.id %}" class="btn btn-sm btn-outline-primary">
+                      End
+                    </a>
+                  {% else %}
+                    <span class="text-muted">You need to start clean</span>
+                  {% endif %}
+                {% endif %}
+              {% endif %}
+            </td>
+            <td>
+              <div class="btn-group" role="group" aria-label="Train actions">
+                <a href="{% url 'cleaning:update-train' pk=train.id %}" class="btn btn-sm btn-outline-secondary">
+                  <i class="bi bi-pencil"></i>
+                </a>
+                <a href="{% url 'cleaning:delete-train' pk=train.id %}" class="btn btn-sm btn-outline-danger">
+                  <i class="bi bi-trash"></i>
+                </a>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
     </table>
-
-  {% else %}
-      <p>There are no trains to clean.</p>
-  {% endif %}
+  </div>
+{% else %}
+  <div class="alert alert-info" role="alert">
+    <i class="bi bi-info-circle me-2"></i>There are no trains to clean.
+  </div>
+{% endif %}
 {% endblock %}
+
+<style>
+  .table th {
+    background-color: #1a1a1a;
+    color: white;
+  }
+  .table-hover tbody tr:hover {
+    background-color: rgba(255, 107, 0, 0.1);
+  }
+  .btn-primary, .btn-primary:hover {
+    background-color: #ff6b00;
+    border-color: #ff6b00;
+  }
+  .btn-outline-primary {
+    color: #ff6b00;
+    border-color: #ff6b00;
+  }
+  .btn-outline-primary:hover {
+    background-color: #ff6b00;
+    color: white;
+  }
+span.badge.bg-approved {
+      background-color: deepskyblue !important;
+  }
+  .badge.bg-success {
+    background-color: #28a745 !important;
+  }
+  .badge.bg-danger {
+    background-color: #dc3545 !important;
+  }
+
+</style>
