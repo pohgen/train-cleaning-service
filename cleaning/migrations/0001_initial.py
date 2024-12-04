@@ -15,33 +15,102 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='CleaningType',
+            name="CleaningType",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(choices=[('SP0', 'SP0'), ('SP1', 'SP1'), ('SP2', 'SP2')], default='Null', max_length=3)),
-                ('description', models.TextField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(
+                        choices=[("SP0", "SP0"), ("SP1", "SP1"), ("SP2", "SP2")],
+                        default="Null",
+                        max_length=3,
+                    ),
+                ),
+                ("description", models.TextField(blank=True, null=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Approval',
+            name="Approval",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('status', models.BooleanField()),
-                ('comments', models.TextField(blank=True, null=True)),
-                ('time', models.DateTimeField(auto_now_add=True)),
-                ('worker', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='approvals', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("status", models.BooleanField()),
+                ("comments", models.TextField(blank=True, null=True)),
+                ("time", models.DateTimeField(auto_now_add=True)),
+                (
+                    "worker",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="approvals",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Train',
+            name="Train",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('status', models.CharField(choices=[('awaits cleaning', 'Awaits cleaning'), ('in progress', 'Cleaning in progress'), ('completed', 'Cleaning is completed'), ('approved', 'Cleaning is approved'), ('canceled', 'Cleaning is canceled')], default='awaits cleaning', max_length=31)),
-                ('start_time', models.DateTimeField()),
-                ('end_time', models.DateTimeField()),
-                ('approval', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='cleaning.approval')),
-                ('cleaning_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='cleaning.cleaningtype')),
-                ('workers', models.ManyToManyField(related_name='trains', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("awaits cleaning", "Awaits cleaning"),
+                            ("in progress", "Cleaning in progress"),
+                            ("completed", "Cleaning is completed"),
+                            ("approved", "Cleaning is approved"),
+                            ("canceled", "Cleaning is canceled"),
+                        ],
+                        default="awaits cleaning",
+                        max_length=31,
+                    ),
+                ),
+                ("start_time", models.DateTimeField()),
+                ("end_time", models.DateTimeField()),
+                (
+                    "approval",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="cleaning.approval",
+                    ),
+                ),
+                (
+                    "cleaning_type",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="cleaning.cleaningtype",
+                    ),
+                ),
+                (
+                    "workers",
+                    models.ManyToManyField(
+                        related_name="trains", to=settings.AUTH_USER_MODEL
+                    ),
+                ),
             ],
         ),
     ]

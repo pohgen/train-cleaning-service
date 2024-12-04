@@ -26,8 +26,5 @@ class TrainSearchForm(forms.Form):
         max_length=255,
         required=False,
         label="",
-        widget=forms.TextInput(
-            attrs={
-                "placeholder": "Search train by name"
-            }
-        ))
+        widget=forms.TextInput(attrs={"placeholder": "Search train by name"}),
+    )

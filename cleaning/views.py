@@ -10,6 +10,7 @@ from django.views import generic
 from cleaning.forms import TrainCreateForm, ApprovalForm, TrainSearchForm
 from cleaning.models import Train
 
+
 def index(request):
 
     cleaned_trains = Train.objects.filter(
@@ -20,14 +21,14 @@ def index(request):
         Q(status=Train.Status.AWAITS) | Q(status=Train.Status.IN_PROGRESS)
     ).values_list("name", flat=True)
 
-    rejected_trains = Train.objects.filter(
-        status=Train.Status.CANCELED
-    ).values_list('name', flat=True)
+    rejected_trains = Train.objects.filter(status=Train.Status.CANCELED).values_list(
+        "name", flat=True
+    )
 
     context = {
         "cleaned_trains": cleaned_trains,
         "uncleaned_trains": uncleaned_trains,
-        "rejected_trains": rejected_trains
+        "rejected_trains": rejected_trains,
     }
     return render(request, "cleaning/index.html", context=context)
 
@@ -40,9 +41,7 @@ class TrainListView(LoginRequiredMixin, generic.ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(TrainListView, self).get_context_data(**kwargs)
         search_name = self.request.GET.get("name", "")
-        context["search_form"] = TrainSearchForm(
-            initial={"name": search_name}
-        )
+        context["search_form"] = TrainSearchForm(initial={"name": search_name})
         return context
 
     def get_queryset(self):
@@ -60,6 +59,7 @@ def stamp_date_start(request, pk):
     train.save()
     return HttpResponseRedirect(reverse_lazy("cleaning:trains-list"))
 
+
 def stamp_date_end(request, pk):
     train = Train.objects.get(id=pk)
     train.end_time = now()
@@ -75,8 +75,11 @@ class TrainCreateView(LoginRequiredMixin, generic.CreateView):
 
     def get_form(self, *args, **kwargs):
         form = super().get_form(*args, **kwargs)
-        form.fields["workers"].queryset = form.fields["workers"].queryset.exclude(Q(username="admin") | Q(role="auditor"))
+        form.fields["workers"].queryset = form.fields["workers"].queryset.exclude(
+            Q(username="admin") | Q(role="auditor")
+        )
         return form
+
 
 class TrainUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Train
@@ -93,7 +96,6 @@ class TrainDeleteView(LoginRequiredMixin, generic.DeleteView):
 class TrainDetailView(LoginRequiredMixin, generic.DetailView):
     model = Train
     queryset = Train.objects.all().prefetch_related("approval__worker")
-
 
 
 def approval_create_view(request, pk):
@@ -117,5 +119,6 @@ def approval_create_view(request, pk):
             return redirect("cleaning:trains-list")
     else:
         form = ApprovalForm(initial={"train": train, "worker": request.user})
-    return render(request, "cleaning/approval_form.html", {'form': form, 'train': train})
-
+    return render(
+        request, "cleaning/approval_form.html", {"form": form, "train": train}
+    )

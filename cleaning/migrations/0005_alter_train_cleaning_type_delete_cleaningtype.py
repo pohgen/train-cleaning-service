@@ -6,16 +6,20 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cleaning', '0004_alter_train_approval'),
+        ("cleaning", "0004_alter_train_approval"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='train',
-            name='cleaning_type',
-            field=models.CharField(choices=[('SP0', 'SP0'), ('SP1', 'SP1'), ('SP2', 'SP2')], default='Null', max_length=3),
+            model_name="train",
+            name="cleaning_type",
+            field=models.CharField(
+                choices=[("SP0", "SP0"), ("SP1", "SP1"), ("SP2", "SP2")],
+                default="Null",
+                max_length=3,
+            ),
         ),
         migrations.DeleteModel(
-            name='CleaningType',
+            name="CleaningType",
         ),
     ]

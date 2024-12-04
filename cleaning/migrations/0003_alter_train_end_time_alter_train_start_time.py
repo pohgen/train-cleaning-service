@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cleaning', '0002_train_name_alter_approval_status'),
+        ("cleaning", "0002_train_name_alter_approval_status"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='train',
-            name='end_time',
+            model_name="train",
+            name="end_time",
             field=models.DateTimeField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='train',
-            name='start_time',
+            model_name="train",
+            name="start_time",
             field=models.DateTimeField(blank=True, null=True),
         ),
     ]

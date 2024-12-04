@@ -39,8 +39,8 @@ class WorkerDetailView(LoginRequiredMixin, DetailView):
             trains_to_approve = Train.objects.filter(
                 approval__isnull=True,
                 status=Train.Status.COMPLETED,
-                end_time__isnull=False
+                end_time__isnull=False,
             )
-            context['trains_to_approve'] = trains_to_approve
+            context["trains_to_approve"] = trains_to_approve
 
         return context
