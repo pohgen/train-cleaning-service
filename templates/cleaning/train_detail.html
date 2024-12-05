@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="mb-0">Train Details: {{ train.name }}</h1>
+  <a href="{% url 'cleaning:trains-list' %}" class="btn btn-secondary">
+    <i class="bi bi-arrow-left me-2"></i>Back to List
+  </a>
+</div>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <h4>Details</h4>
+    <p><strong>Cleaning type:</strong> {{ train.cleaning_type }}</p>
+    <p><strong>Status:</strong> {{ train.status }}</p>
+    <p><strong>Approval:</strong> 
+      {% if train.approval %}
+        <span class="badge bg-{{ train.approval.status|yesno:'success,danger' }}">
+          {{ train.approval.status|yesno:"Approved,Rejected" }}
+        </span>
+      {% else %}
+        <span class="text-muted">Pending</span>
+      {% endif %}
+    </p>
+    <p><strong>Start time:</strong> {{ train.start_time }}</p>
+    <p><strong>End time:</strong> {{ train.end_time }}</p>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <h4>Workers</h4>
+    {% if train.workers.all %}
+      <ul class="list-group">
+        {% for worker in train.workers.all %}
+          <li class="list-group-item">
+            <strong>Name:</strong> {{ worker.first_name }} {{ worker.last_name }}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No workers assigned yet.</p>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <h4>Actions</h4>
+    {% if user.role == "auditor" and train.end_time and not train.approval %}
+      <a href="{% url 'cleaning:approval-create' pk=train.id %}" class="btn btn-outline-primary">
+        <i class="bi bi-check-circle me-2"></i>Approve Cleaning
+      </a>
+    {% else %}
+      {% if user.role == "cleaner" and not train.start_time and not train.end_time %}
+        <a href="{% url 'cleaning:clean-time-start' pk=train.id %}" class="btn btn-outline-primary mt-2">
+          <i class="bi bi-stop-circle me-2"></i>Start Cleaning
+        </a>
+      {% else %}
+        {% if user.role == "cleaner" and train.start_time and not train.end_time%}
+        <a href="{% url 'cleaning:clean-time-end' pk=train.id %}" class="btn btn-outline-primary mt-2">
+          <i class="bi bi-stop-circle me-2"></i>End Cleaning
+        </a>
+        {% else %}
+          <p>No actions to do.</p>
+        {% endif %}
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

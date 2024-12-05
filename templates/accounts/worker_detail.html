@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="mb-0">Worker Details: {{ worker.username }}</h1>
+</div>
+
+<div class="card mb-4 shadow-sm">
+  <div class="card-header bg-light text-dark">
+    <h4 class="mb-0">Personal Information</h4>
+  </div>
+  <div class="card-body">
+    <div class="row mb-3">
+      <div class="col-4 text-muted"><strong>First Name:</strong></div>
+      <div class="col-8">{{ worker.first_name }}</div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-4 text-muted"><strong>Last Name:</strong></div>
+      <div class="col-8">{{ worker.last_name }}</div>
+    </div>
+    <div class="row">
+      <div class="col-4 text-muted"><strong>Role:</strong></div>
+      <div class="col-8">{{ worker.get_role_display }}</div>
+    </div>
+  </div>
+</div>
+
+{% if worker.role == "cleaner" %}
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header bg-light text-dark">
+      <h4 class="mb-0">Your Trains</h4>
+    </div>
+    <div class="card-body">
+      {% if worker.trains.all %}
+        <ul class="list-group">
+          {% for train in worker.trains.all %}
+            <li class="list-group-item">
+              <p><strong>Name:</strong> {{ train.name }}</p>
+              <p><strong>Cleaning Type:</strong> {{ train.cleaning_type }}</p>
+              <p><strong>Start Time:</strong> 
+                {% if train.start_time %}
+                  {{ train.start_time }}
+                {% else %}
+                  <a href="{% url 'cleaning:clean-time-start' pk=train.id %}" class="btn btn-sm btn-outline-secondary">Start Cleaning</a>
+                {% endif %}
+              </p>
+              <p><strong>End Time:</strong> 
+                {% if train.end_time %}
+                  {{ train.end_time }}
+                {% else %}
+                  {% if train.start_time %}
+                    <a href="{% url 'cleaning:clean-time-end' pk=train.id %}" class="btn btn-sm btn-outline-secondary">End Cleaning</a>
+                  {% else %}
+                    <span class="text-muted">Start cleaning first</span>
+                  {% endif %}
+                {% endif %}
+              </p>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-muted">No assigned trains.</p>
+      {% endif %}
+    </div>
+  </div>
+{% elif worker.role == "auditor" %}
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header bg-light text-dark">
+      <h4 class="mb-0">Trains to Approve</h4>
+    </div>
+    <div class="card-body">
+      {% if trains_to_approve %}
+        <ul class="list-group">
+          {% for train in trains_to_approve %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <strong>{{ train.name }}</strong>
+              <a href="{% url 'cleaning:approval-create' pk=train.id %}" class="btn btn-sm btn-outline-secondary">Approve</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-muted">No trains pending approval.</p>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
+{% endblock %}
+
+<style>
+  .card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-header {
+    background-color: #f8f9fa;
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+
+  .list-group-item {
+    border: none;
+    padding: 1rem;
+  }
+
+  .list-group-item + .list-group-item {
+    border-top: 1px solid #ddd;
+  }
+
+  .btn-outline-secondary {
+    color: #6c757d;
+    border-color: #6c757d;
+  }
+
+  .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: white;
+  }
+</style>

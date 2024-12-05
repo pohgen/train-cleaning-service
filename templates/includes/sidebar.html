@@ -1,0 +1,51 @@
+<nav class="navbar navbar-expand-lg" style="background-color: #1a1a1a;">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link text-white" href="{% url 'cleaning:index' %}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="{% url 'cleaning:trains-list' %}">Trains</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="{% url 'accounts:workers-list' %}">Workers</a>
+        </li>
+      </ul>
+      
+      <ul class="navbar-nav">
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link text-white" href="{% url 'accounts:worker-detail' pk=user.id %}">{{ user.get_username }}</a>
+          </li>
+          <li class="nav-item">
+            <form method="post" action="{% url 'accounts:logout' %}" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="btn nav-link text-white" style="background: none; border: none;">Log out</button>
+            </form>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link text-white" href="{% url 'accounts:login' %}">Log in</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="{% url 'accounts:register' %}">Sign up</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .nav-link:hover {
+    color: #ff6b00 !important;
+  }
+  
+  .navbar-nav .nav-link.active {
+    color: #ff6b00 !important;
+  }
+</style>
