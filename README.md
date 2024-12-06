@@ -16,7 +16,7 @@ cleaning and the process of confirmation by the checking position.
 
 ## Project link
 
-#will appear when the deployment is complete  
+(https://train-cleaning-service.onrender.com)  
 
 ### Cleaner user:  
 Login: `nikitosik`  
