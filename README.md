@@ -96,16 +96,41 @@ performance (this can be changed by anyone involved in the cleanup).
 - Django
 
 ### Installation Steps
+Setting up Django Project (Python3 must be already installed)
    ```bash
     git clone https://github.com/pohgen/train-cleaning-system.git
     cd train-cleaning-system
     python -m venv venv
     source venv/bin/activate  # On Windows: venv\Scripts\activate
     pip install -r requirements.txt
+```
+Setting Up Environment Variables
+This project requires certain environment variables to be set. A .env.template file has been provided to help you get started.
+Steps:
+1) Copy the .env.template file to .env:
+```bash
+cp .env.template .env
+```
+2) Open the .env file and fill in the required values:
+```bash
+POSTGRES_DB=<name of your db>
+POSTGRES_DB_PORT=<port of your db>
+POSTGRES_USER=<username of your db>
+POSTGRES_PASSWORD=<password of your db>
+POSTGRES_HOST=<host of your db>
+DJANGO_SECRET_KEY=your_secret_key_here
+DATABASE_URL=postgresql://neondb_owner:VHnmiGoLbX32@ep-small-forest-a227mgij.eu-central-1.aws.neon.tech/neondb?sslmode=require
+```
+Replace your_secret_key_here with a secure, randomly generated secret key. You can generate one using the following command in a Python shell:
+```bash
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+```
+Migrate the database and run server
+```
     python manage.py migrate
     python manage.py runserver
-   ```
-Open your browser and navigate to http://127.0.0.1:8000/.
+```
+Open your browser and navigate to http://127.0.0.1:8000/
 
 ---
 
