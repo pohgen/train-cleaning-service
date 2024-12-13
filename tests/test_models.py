@@ -2,6 +2,7 @@ import time
 
 from django.test import TestCase
 from django.utils.timezone import now
+
 from cleaning.models import Train, Approval
 from accounts.models import Worker
 
@@ -10,7 +11,9 @@ class TrainModelTest(TestCase):
     def setUp(self):
         self.worker = Worker.objects.create(username="testworker")
 
-        self.approval = Approval.objects.create(worker=self.worker, status=True, comments="Test approval")
+        self.approval = Approval.objects.create(
+            worker=self.worker, status=True, comments="Test approval"
+        )
 
         self.train = Train.objects.create(
             name="78-002",
@@ -58,7 +61,9 @@ class TrainModelTest(TestCase):
 class ApprovalModelTest(TestCase):
     def setUp(self):
         self.worker = Worker.objects.create(username="approver", role="auditor")
-        self.approval = Approval.objects.create(worker=self.worker, status=True, comments="Initial approval")
+        self.approval = Approval.objects.create(
+            worker=self.worker, status=True, comments="Initial approval"
+        )
 
     def test_approval_string_representation(self):
         self.assertEqual(str(self.approval), "True")

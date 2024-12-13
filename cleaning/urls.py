@@ -1,15 +1,15 @@
 from django.urls import path
 
 from cleaning.views import (
+    approval_create_view,
     index,
-    TrainListView,
     stamp_date_start,
     stamp_date_end,
     TrainCreateView,
-    TrainUpdateView,
     TrainDeleteView,
-    approval_create_view,
     TrainDetailView,
+    TrainListView,
+    TrainUpdateView,
 )
 
 urlpatterns = [
