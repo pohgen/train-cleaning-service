@@ -1,6 +1,7 @@
-from django.test import TestCase
 from django.contrib.auth import get_user_model
+from django.test import TestCase
 from django.urls import reverse
+
 from accounts.models import Worker
 from cleaning.models import Train, Approval
 
@@ -43,7 +44,9 @@ class TrainAdminTest(TestCase):
             username="admin", password="adminpass"
         )
         self.client.login(username="admin", password="adminpass")
-        self.train = Train.objects.create(name="78-002", cleaning_type="SP2", status="completed")
+        self.train = Train.objects.create(
+            name="78-002", cleaning_type="SP2", status="completed"
+        )
 
     def test_train_admin_list_display(self):
         url = reverse("admin:cleaning_train_changelist")
@@ -65,7 +68,7 @@ class TrainAdminTest(TestCase):
     def test_train_admin_ordering(self):
         url = reverse("admin:cleaning_train_changelist")
         response = self.client.get(url)
-        trains = response.context_data['cl'].result_list
+        trains = response.context_data["cl"].result_list
         self.assertEqual(trains[0], self.train)
 
 
@@ -75,7 +78,9 @@ class ApprovalAdminTest(TestCase):
             username="admin", password="adminpass"
         )
         self.client.login(username="admin", password="adminpass")
-        self.train = Train.objects.create(name="78-002", cleaning_type="SP2", status="completed")
+        self.train = Train.objects.create(
+            name="78-002", cleaning_type="SP2", status="completed"
+        )
         self.approval = Approval.objects.create(worker=self.superuser, status=True)
         self.train.approval = self.approval
 
