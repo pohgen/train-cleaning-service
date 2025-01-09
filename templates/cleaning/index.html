@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header bg-dark text-white">
+        <h2 class="card-title mb-0">Train Cleaning Service</h2>
+      </div>
+      <div class="card-body">
+        <p>Today we are working and here are our statistics:</p>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <strong>Completed cleaning:</strong>
+            <ul>
+              {% for train in cleaned_trains %}
+                <li>{{ train }}</li>
+              {% endfor %}
+            </ul>
+          </li>
+          <li class="list-group-item">
+            <strong>Awaiting cleaning:</strong>
+            <ul>
+              {% for train in uncleaned_trains %}
+                <li>{{ train }}</li>
+              {% endfor %}
+            </ul>
+          </li>
+          <li class="list-group-item">
+            <strong>Rejected cleaning:</strong>
+            <ul>
+              {% for train in rejected_trains %}
+                <li>{{ train }}</li>
+              {% endfor %}
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .card {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  }
+  .card-header {
+    background-color: #1a1a1a !important;
+  }
+  .list-group-item {
+    border-color: #ff6b00;
+  }
+  .list-group-item strong {
+    color: #ff6b00;
+  }
+  ul {
+    padding-left: 20px;
+  }
+</style>
+{% endblock %}
