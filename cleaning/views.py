@@ -11,7 +11,6 @@ from cleaning.models import Train
 
 
 def index(request):
-
     cleaned_trains = Train.objects.filter(
         Q(status=Train.Status.COMPLETED) | Q(status=Train.Status.APPROVED)
     ).values_list("name", flat=True)
