@@ -142,5 +142,6 @@ Open your browser and navigate to http://127.0.0.1:8000/
 ## Contact
 For questions or contributions, feel free to reach out:
 
-- **Email**: sanyok.it@gmail.com
+- **Email**: haliuta.oleksandr@gmail.com
+- **LinkedIn**: https://www.linkedin.com/in/oleksandr-haliuta/
 - **GitHub**: pohgen
